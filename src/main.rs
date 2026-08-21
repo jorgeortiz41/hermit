@@ -35,7 +35,7 @@ fn main() {
             {
                 println!("{} is a shell builtin", type_command);
             } else {
-                eprintln!("{}: command not found", type_command);
+                eprintln!("{}: not found", type_command);
             }
         } else if parsed_command == String::from("echo") {
             // Echo the rest of line after "echo" command
