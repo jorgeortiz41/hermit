@@ -10,7 +10,7 @@ fn detect_command(command: &str) -> &str {
 
 fn main() {
     loop {
-        // Initialize Shell and read input
+        // Read
         print!("$ ");
         io::stdout().flush().unwrap();
         let mut command = String::new();
@@ -19,13 +19,21 @@ fn main() {
             .expect("Failed to read line");
         let command = command.trim();
 
-        // Detect Command
+        // Eval
         let parsed_command = detect_command(&command);
 
-        // Handle parsed command
+        // Eval - Handle parsed command
         if parsed_command == String::from("exit") {
             // Exit if command is "exit"
             break;
+        } else if parsed_command == String::from("type") {
+            // Type command
+            let type_command = &command[5..];
+            if type_command == String::from("exit") || type_command == String::from("echo") {
+                println!("{} is a shell builtin", type_command);
+            } else {
+                eprintln!("{}: command not found", type_command);
+            }
         } else if parsed_command == String::from("echo") {
             // Echo the rest of line after "echo" command
             println!("{}", &command[5..]);
@@ -33,6 +41,8 @@ fn main() {
             // Command not found error
             eprintln!("{}: command not found", command);
         }
+
+        // Print
         io::stdout().flush().unwrap();
     }
 }
