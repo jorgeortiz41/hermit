@@ -14,28 +14,31 @@ fn split_command(input: &str) -> (&str, &str) {
     }
 }
 
-fn handle_command(command_args: (&str, &str)) {
-    let (command, args) = command_args;
-    if command == "type" {
-        // Type command
-        if args == "exit" || args == "echo" || args == "type" {
-            println!("{} is a shell builtin", args);
-        } else {
-            eprintln!("{}: not found", args);
+fn handle_command(command: &str, args: &str) -> ShellAction {
+    match command {
+        "exit" => ShellAction::Exit,
+        "type" => {
+            if args == "exit" || args == "echo" || args == "type" {
+                println!("{} is a shell builtin", args);
+            } else {
+                eprintln!("{}: not found", args);
+            }
+            ShellAction::Continue
         }
-    } else if command == "echo" {
-        // Echo the rest of line after "echo" command
-        println!("{}", args);
-    } else {
-        // Command not found error
-        eprintln!("{}: command not found", command);
+        "echo" => {
+            println!("{}", args);
+            ShellAction::Continue
+        }
+        _ => {
+            eprintln!("{}: command not found", command);
+            ShellAction::Continue
+        }
     }
 }
 
 fn main() {
     loop {
         // Read
-        println!("remember to-do items!");
         print!("$ ");
         io::stdout().flush().unwrap();
         let mut command = String::new();
@@ -45,15 +48,10 @@ fn main() {
         let command = command.trim();
 
         // Eval
-        let parsed_command = split_command(&command);
-
-        if parsed_command.0 == "exit" {
-            // Exit if command is "exit"
+        let (command, args) = split_command(command);
+        if let ShellAction::Exit = handle_command(command, args) {
             break;
         }
-
-        // Eval - Handle parsed command
-        handle_command(parsed_command);
 
         // Print
         io::stdout().flush().unwrap();
