@@ -29,7 +29,10 @@ fn main() {
         } else if parsed_command == String::from("type") {
             // Type command
             let type_command = &command[5..];
-            if type_command == String::from("exit") || type_command == String::from("echo") {
+            if type_command == String::from("exit")
+                || type_command == String::from("echo")
+                || type_command == String::from("type")
+            {
                 println!("{} is a shell builtin", type_command);
             } else {
                 eprintln!("{}: command not found", type_command);
