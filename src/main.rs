@@ -13,7 +13,7 @@ fn main() {
         let command = command.trim();
 
         // Quit if command is quit
-        if command == String::from("quit") {
+        if command == String::from("exit") {
             break;
         }
 
